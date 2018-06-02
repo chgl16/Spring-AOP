@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 配置被代理的对象 -->
+    <bean id="test1Service" class="top.chgl16.aop.Test1Service">
+        <property name="name" value="aop"/>
+    </bean>
+
+    <!-- 配置前置通知 -->
+    <bean id="myMethodBeforeAdvice" class="top.chgl16.aop.MyMethodBeforeAdvice">
+    </bean>
+
+    <!-- 配置代理对象 -->
+    <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!-- 配置代理接口 -->
+        <property name="proxyInterfaces">
+            <list>
+                <value>top.chgl16.aop.TestServiceInter</value>   <!-- 接口要写全称 -->
+                <value>top.chgl16.aop.TestServiceInter2</value>
+            </list>
+        </property>
+
+        <!-- 把通知织入到代理对象 -->
+        <property name="interceptorNames">
+            <!-- 相当于把前置通知和代理对象关联 -->
+            <value>myMethodBeforeAdvice</value>   <!-- 这要是String，不能引用了 -->
+        </property>
+
+        <!-- 配置被代理对象 -->
+        <property name="target">
+            <ref bean="test1Service" />       <!-- 这里需要引用 -->
+        </property>
+    </bean>
+
+
+</beans>
